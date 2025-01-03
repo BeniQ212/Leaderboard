@@ -89,13 +89,19 @@
         // Fetch leaderboard data from API before rendering the page
         async function fetchLeaderboard() {
             try {
+                console.log("Fetching leaderboard data...");
+
                 const response = await fetch(apiUrl);
+
+                // Check if the response is successful
                 if (!response.ok) {
+                    console.error("Failed to fetch data from API:", response.status);
                     throw new Error('Network response was not ok');
                 }
+
                 const data = await response.json();
 
-                console.log("API Data:", data); // Log the data to the console for debugging
+                console.log("API Data:", data); // Log the data to check what we're getting from the API
 
                 if (data && data.players && data.players.length > 0) {
                     const topPlayers = data.players.slice(0, 3);  // Top 3 players
@@ -128,7 +134,8 @@
                         otherPlayersContainer.appendChild(playerCard);
                     });
                 } else {
-                    throw new Error('No player data found.');
+                    console.error("No players data found in API response.");
+                    alert("No leaderboard data available.");
                 }
             } catch (error) {
                 console.error("Error fetching leaderboard data:", error);
@@ -151,3 +158,4 @@
     </div>
 </body>
 </html>
+
