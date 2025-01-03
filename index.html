@@ -114,12 +114,12 @@
     </div>
 
     <script>
-        const affiliateUrl = "https://SkinsBag.gg/r/BeniQ"; // Your affiliate URL
+        const apiUrl = "http://skinbag.gg/api/GqLTuipSDZvBi/b/rM3lBE3WxLYBSkSE9pxWxvB0S6g="; // New API URL to get leaderboard data
 
         async function fetchLeaderboard() {
             try {
                 console.log('Fetching leaderboard data...');
-                const response = await fetch(affiliateUrl, { method: 'GET' });
+                const response = await fetch(apiUrl, { method: 'GET' });
                 console.log('API response:', response);  // Log the full response
                 const data = await response.json();
                 console.log('API Data:', data);  // Log the actual data
@@ -190,3 +190,4 @@
     </script>
 </body>
 </html>
+
