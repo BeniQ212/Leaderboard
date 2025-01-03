@@ -83,21 +83,11 @@
             width: 30%;
         }
     </style>
-</head>
-<body>
-    <div id="leaderboard">
-        <div id="top-players">
-            <!-- Top players will be dynamically inserted here -->
-        </div>
-        <div id="other-players">
-            <!-- Other players will be dynamically inserted here -->
-        </div>
-    </div>
-
     <script>
-        // Fetch leaderboard data from API
+        // API URL
         const apiUrl = "https://SkinsBag.gg/api/getLeaderboard?key=GqLTuipSDZvBi/b/rM3lBE3WxLYBSkSE9pxWxvB0S6g=";
 
+        // Fetch leaderboard data from API before rendering the page
         async function fetchLeaderboard() {
             try {
                 const response = await fetch(apiUrl);
@@ -112,38 +102,4 @@
                     topPlayers.forEach((player, index) => {
                         const playerCard = document.createElement('div');
                         playerCard.classList.add('player-card');
-                        playerCard.classList.add(`rank-${index + 1}`);
-                        playerCard.innerHTML = `
-                            <img src="${player.avatar}" alt="${player.name}">
-                            <div class="name">${player.name}</div>
-                            <div class="wager">${player.wager} Wager</div>
-                        `;
-                        topPlayersContainer.appendChild(playerCard);
-                    });
-
-                    // Display other players
-                    const otherPlayersContainer = document.getElementById('other-players');
-                    otherPlayers.forEach(player => {
-                        const playerCard = document.createElement('div');
-                        playerCard.classList.add('player-card');
-                        playerCard.innerHTML = `
-                            <img src="${player.avatar}" alt="${player.name}">
-                            <div class="name">${player.name}</div>
-                            <div class="wager">${player.wager} Wager</div>
-                        `;
-                        otherPlayersContainer.appendChild(playerCard);
-                    });
-                } else {
-                    alert("Failed to load leaderboard data.");
-                }
-            } catch (error) {
-                console.error("Error fetching leaderboard data:", error);
-                alert("Error loading data.");
-            }
-        }
-
-        // Load leaderboard when page is ready
-        fetchLeaderboard();
-    </script>
-</body>
-</html>
+    
