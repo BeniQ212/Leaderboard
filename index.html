@@ -114,15 +114,12 @@
     </div>
 
     <script>
-        const apiUrl = "http://skinbag.gg/api/GqLTuipSDZvBi/b/rM3lBE3WxLYBSkSE9pxWxvB0S6g="; // New API URL to get leaderboard data
+        const apiUrl = "http://skinbag.gg/api/GqLTuipSDZvBi/b/rM3lBE3WxLYBSkSE9pxWxvB0S6g="; // API URL to get leaderboard data
 
         async function fetchLeaderboard() {
             try {
-                console.log('Fetching leaderboard data...');
-                const response = await fetch(apiUrl, { method: 'GET' });
-                console.log('API response:', response);  // Log the full response
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                console.log('API Data:', data);  // Log the actual data
 
                 if (!data || !data.players || data.players.length === 0) {
                     throw new Error('No data found.');
@@ -190,4 +187,3 @@
     </script>
 </body>
 </html>
-
