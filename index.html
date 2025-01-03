@@ -7,73 +7,29 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #131313;
-            color: white;
-            margin: 0;
-            padding: 0;
+            background-color: #f4f4f4;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            height: 100vh;
+            margin: 0;
         }
 
         #leaderboard {
-            width: 90%;
+            width: 80%;
             max-width: 1200px;
-            margin-top: 20px;
-        }
-
-        .top-player {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .top-player img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-        .top-player h2 {
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .top-player p {
-            font-size: 18px;
-            color: #ffdd00;  /* Gold color for wager */
-        }
-
-        .rank-2, .rank-3 {
-            background-color: #444;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 10px;
-            width: 45%;
-        }
-
-        .rank-2 img, .rank-3 img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-        .other-players {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
         }
 
         .player-card {
-            background-color: #222;
-            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             margin: 10px;
-            width: 23%;
-            border-radius: 10px;
+            padding: 15px;
             text-align: center;
+            display: inline-block;
+            width: 100%;
         }
 
         .player-card img {
@@ -83,124 +39,111 @@
             margin-bottom: 10px;
         }
 
-        .player-card h3 {
+        .rank-1 {
+            border: 2px solid gold;
+        }
+
+        .rank-2 {
+            border: 2px solid silver;
+        }
+
+        .rank-3 {
+            border: 2px solid bronze;
+        }
+
+        .name {
             font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .player-card p {
-            font-size: 14px;
-            color: #ffdd00; /* Gold color for wager */
-        }
-
-        .prize {
-            font-size: 16px;
-            color: #ffd700;
             font-weight: bold;
+            color: #333;
+        }
+
+        .wager {
+            font-size: 14px;
+            color: #666;
+        }
+
+        #top-players {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        #top-players .player-card {
+            margin: 10px;
+            width: 30%;
+        }
+
+        #other-players {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #other-players .player-card {
+            width: 30%;
         }
     </style>
 </head>
 <body>
     <div id="leaderboard">
-        <!-- Top 1 Player -->
-        <div class="top-player" id="top-1">
-            <img src="" alt="Top 1 Player Avatar" id="top1-avatar">
-            <h2 id="top1-name"></h2>
-            <p id="top1-wager">Wager: $0</p>
-            <p class="prize" id="top1-prize">Prize: 85 Gems</p>
+        <div id="top-players">
+            <!-- Top players will be dynamically inserted here -->
         </div>
-
-        <!-- Top 2 & 3 Players -->
-        <div class="rank-2" id="rank-2">
-            <img src="" alt="Rank 2 Avatar" id="rank2-avatar">
-            <h3 id="rank2-name"></h3>
-            <p id="rank2-wager">Wager: $0</p>
-            <p class="prize" id="rank2-prize">Prize: 35 Gems</p>
+        <div id="other-players">
+            <!-- Other players will be dynamically inserted here -->
         </div>
-
-        <div class="rank-3" id="rank-3">
-            <img src="" alt="Rank 3 Avatar" id="rank3-avatar">
-            <h3 id="rank3-name"></h3>
-            <p id="rank3-wager">Wager: $0</p>
-            <p class="prize" id="rank3-prize">Prize: 20 Gems</p>
-        </div>
-
-        <!-- Other Players -->
-        <div class="other-players" id="other-players"></div>
     </div>
 
     <script>
-        // Your API URL and API key
-        const apiUrl = 'https://SkinsBag.gg/r/BeniQ';  // API endpoint for your data
-        const apiKey = 'GqLTuipSDZvBi/b/rM3lBE3WxLYBSkSE9pxWxvB0S6g=';  // Your API key
+        // Fetch leaderboard data from API
+        const apiUrl = "https://SkinsBag.gg/api/getLeaderboard?key=GqLTuipSDZvBi/b/rM3lBE3WxLYBSkSE9pxWxvB0S6g=";
 
-        // Function to fetch and display leaderboard data
         async function fetchLeaderboard() {
             try {
-                // Adding the API key to the headers of the request
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`,  // Include API key in Authorization header
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error loading data');
-                }
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                updateLeaderboard(data);
+
+                if (data && data.players) {
+                    const topPlayers = data.players.slice(0, 3);  // Top 3 players
+                    const otherPlayers = data.players.slice(3);  // The rest of the players
+
+                    // Display top 3 players
+                    const topPlayersContainer = document.getElementById('top-players');
+                    topPlayers.forEach((player, index) => {
+                        const playerCard = document.createElement('div');
+                        playerCard.classList.add('player-card');
+                        playerCard.classList.add(`rank-${index + 1}`);
+                        playerCard.innerHTML = `
+                            <img src="${player.avatar}" alt="${player.name}">
+                            <div class="name">${player.name}</div>
+                            <div class="wager">${player.wager} Wager</div>
+                        `;
+                        topPlayersContainer.appendChild(playerCard);
+                    });
+
+                    // Display other players
+                    const otherPlayersContainer = document.getElementById('other-players');
+                    otherPlayers.forEach(player => {
+                        const playerCard = document.createElement('div');
+                        playerCard.classList.add('player-card');
+                        playerCard.innerHTML = `
+                            <img src="${player.avatar}" alt="${player.name}">
+                            <div class="name">${player.name}</div>
+                            <div class="wager">${player.wager} Wager</div>
+                        `;
+                        otherPlayersContainer.appendChild(playerCard);
+                    });
+                } else {
+                    alert("Failed to load leaderboard data.");
+                }
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('leaderboard').innerHTML = '<p>Error loading data. Please try again later.</p>';
+                console.error("Error fetching leaderboard data:", error);
+                alert("Error loading data.");
             }
         }
 
-        // Function to update the leaderboard
-        function updateLeaderboard(data) {
-            // Assuming 'data' is an array of player objects with fields: 'name', 'avatar', 'wager'
-            const players = data.players; // Change 'players' depending on the actual API structure
-
-            // Update Top 1
-            const top1 = players[0];
-            document.getElementById('top1-avatar').src = top1.avatar;
-            document.getElementById('top1-name').textContent = top1.name;
-            document.getElementById('top1-wager').textContent = `Wager: $${top1.wager}`;
-            document.getElementById('top1-prize').textContent = `Prize: 85 Gems`;
-
-            // Update Rank 2
-            const rank2 = players[1];
-            document.getElementById('rank2-avatar').src = rank2.avatar;
-            document.getElementById('rank2-name').textContent = rank2.name;
-            document.getElementById('rank2-wager').textContent = `Wager: $${rank2.wager}`;
-            document.getElementById('rank2-prize').textContent = `Prize: 35 Gems`;
-
-            // Update Rank 3
-            const rank3 = players[2];
-            document.getElementById('rank3-avatar').src = rank3.avatar;
-            document.getElementById('rank3-name').textContent = rank3.name;
-            document.getElementById('rank3-wager').textContent = `Wager: $${rank3.wager}`;
-            document.getElementById('rank3-prize').textContent = `Prize: 20 Gems`;
-
-            // Update Other Players
-            const otherPlayers = players.slice(3); // Skip the top 3 players
-            const otherPlayersContainer = document.getElementById('other-players');
-            otherPlayersContainer.innerHTML = ''; // Clear any existing players
-
-            otherPlayers.forEach(player => {
-                const playerCard = document.createElement('div');
-                playerCard.classList.add('player-card');
-                playerCard.innerHTML = `
-                    <img src="${player.avatar}" alt="${player.name} Avatar">
-                    <h3>${player.name}</h3>
-                    <p>Wager: $${player.wager}</p>
-                `;
-                otherPlayersContainer.appendChild(playerCard);
-            });
-        }
-
-        // Fetch the leaderboard when the page loads
+        // Load leaderboard when page is ready
         fetchLeaderboard();
-    </script> GqLTuipSDZvBi/b/rM3lBE3WxLYBSkSE9pxWxvB0S6g=
+    </script>
 </body>
 </html>
